@@ -8,6 +8,8 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
+let Status = require('box')
+
 cc.Class({
     extends: cc.Component,
 
@@ -51,8 +53,7 @@ cc.Class({
     onLoad() {
         this.node.parent.on(cc.Node.EventType.TOUCH_START, function (event) {
             cc.log('Touch emit')
-            this.box.getComponent(cc.PrismaticJoint).enabled = false
-            this.spawnNewBox()
+            this.box.getComponent('box').status = Status.building
         }, this)
 
     },
@@ -65,6 +66,14 @@ cc.Class({
         this.node.addChild(newBox)
 
         newBox.setPosition(cc.v2(this.boxSpawnX, this.boxSpawnY))
+
+        let joint = newBox.getComponent(cc.PrismaticJoint)
+
+        joint.connectedBody = this.node.getComponent(cc.RigidBody)
+
+        joint.connectedAnchor = cc.v2(0, -100)
+
+        joint.anchor = cc.v2(0, 50)
 
         this.box = newBox
     },

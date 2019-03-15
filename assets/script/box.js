@@ -14,28 +14,37 @@ cc.Class({
             type: Status,
             visible: false,
         },
+
+        isWaving: false,
+
+        isTop: false,
+
+        rotate_angle: {
+            default: 0,
+            type: cc.Integer
+        },
+
         status: {
             type: Status,
             get() {
                 return this._status
             },
             set(value) {
+                cc.log('status changed')
                 this._status = value
                 switch (value){
                     case Status.building :
                         this.node.getComponent(cc.PrismaticJoint).enabled = false
                         this.node.getComponent(cc.RigidBody).fixedRotation = true
-                        cc.log(value)
+                        this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0)
                         //TODO set speed
                         break
                     case Status.built :
                         this.node.getComponent(cc.RigidBody).fixedRotation = false
                         this.node.getComponent(cc.RevoluteJoint).enabled = true
-                        cc.log(value)
                         break
                     case Status.base :
                         this.node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Static
-                        cc.log(value)
                         break
                     default: 
                         cc.log(value)
@@ -48,13 +57,35 @@ cc.Class({
     
     },
 
+    start() {
+        if(this.isWaving){
+            this.wave()
+        }
+    },
+
     onTouch() {
         cc.log('emit func onTouch')
         cc.log(this.getComponent(cc.RopeJoint).enabled)
     },
 
+    onBeginContact: function (contact, selfCollider, otherCollider) {
+        if(this.status == Status.building){
+            if(otherCollider.node.isTop){
+                let currentRoof = otherCollider.node
+                let joint = currentRoof.getComponent(cc.RevoluteJoint)
+                joint.connectedBody = this.node.getComponent(cc.RigidBody)
+                this.node.status = Status.built
+            }
+        }
+    },
+
     wave() {
         //TODO 摇摆
+        let waveSequence = cc.sequence(cc.rotateTo(1, 15),cc.rotateTo(1, 0), cc.rotateTo(1, -15), cc.rotateTo(1, 0))
+        let action = cc.repeatForever(waveSequence)
+        this.node.runAction(action)
     }
 
 })
+
+module.exports = Status
