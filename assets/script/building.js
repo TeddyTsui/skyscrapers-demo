@@ -29,62 +29,47 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
-        boxPrefab: {
-            default: null,
-            type: cc.Prefab
-        },
-
-        boxSpawnX: 0,
-
-        boxSpawnY: 0,
-
-        box: {
-            default: null,
-            type: cc.Node,
-        },
-
         camera: {
             default: null,
             type: cc.Node
         },
 
-        cameraOffset: 0,
+        levels: {
+            default: [],
+            type: [cc.Node]
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    start() {
+    onLoad () {
+    },
+
+    start () {
 
     },
 
-    onLoad() {
-        // this.cameraOffset = this.node.y - this.camera.y
+    goUpstairs() {
+        let action = cc.moveBy(2, cc.v2(0, 100))
+        this.camera.runAction(action)
     },
 
-    update (dt) {
-        // this.node.y = this.camera.y + this.cameraOffset
-    },
+    buildSucceed(newBox) {
+        this.levels.push(newBox)
 
-    drop() {
-        this.box.getComponent('box').status = Status.building
-        return this.box
-    },
+        if(this.levels.length >= 6){
+            this.goUpstairs()
+            let boxCtrl = this.levels[2].getComponent('box')
+            if(boxCtrl != null){
+                boxCtrl.status = Status.base
+            }
 
-    spawnNewBox() {
-        let newBox = cc.instantiate(this.boxPrefab)
+            if(this.levels.length >= 7){
+                let node_ready_to_destroy =  this.levels.shift()
+                cc.log(this.levels.length)
+            }
+        }
+    }
 
-        this.node.addChild(newBox)
-
-        newBox.setPosition(cc.v2(this.boxSpawnX, this.boxSpawnY))
-
-        let joint = newBox.getComponent(cc.PrismaticJoint)
-
-        joint.connectedBody = this.node.getComponent(cc.RigidBody)
-
-        joint.connectedAnchor = cc.v2(0, -100)
-
-        joint.anchor = cc.v2(0, 50)
-
-        this.box = newBox
-    },
+    // update (dt) {},
 });
