@@ -41,9 +41,9 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.324,
-      "y": 0.324,
-      "z": 0.324
+      "x": 0.7101469637398344,
+      "y": 0.7101469637398344,
+      "z": 0.7101469637398344
     },
     "_quat": {
       "__type__": "cc.Quat",
@@ -651,7 +651,7 @@
     "collideConnected": false,
     "localAxisA": {
       "__type__": "cc.Vec2",
-      "x": 1,
+      "x": 0,
       "y": 1
     },
     "referenceAngle": 0,
@@ -1012,7 +1012,7 @@
     },
     "_enabled": true,
     "_status": 4,
-    "isWaving": false,
+    "isWaving": true,
     "isTop": true,
     "rotate_angle": 0,
     "statusChanged": false,
@@ -1064,7 +1064,7 @@
     "collideConnected": false,
     "localAxisA": {
       "__type__": "cc.Vec2",
-      "x": 1,
+      "x": 0,
       "y": 1
     },
     "referenceAngle": 0,
@@ -1087,7 +1087,7 @@
     "anchor": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": 50
     },
     "connectedAnchor": {
       "__type__": "cc.Vec2",

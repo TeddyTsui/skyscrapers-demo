@@ -46,7 +46,7 @@ cc.Class({
                         this.node.dispatchEvent(new cc.Event.EventCustom('buildDone', true))
                         break
                     case Status.base:
-                        this.scheduleOnce(()=>{
+                        this.scheduleOnce(() => {
                             this.node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Static
                         }, 0)
                         break
@@ -72,15 +72,20 @@ cc.Class({
 
     // 只在两个碰撞体开始接触时被调用一次
     onBeginContact(contact, selfCollider, otherCollider) {
+        if (this.status == Status.building) {
+            if (otherCollider.node.getComponent('box') &&
+                otherCollider.node.getComponent('box').isTop) {
+                // TODO 判断落点(接触点)
+                if (this.whetherToBuild(selfCollider, otherCollider)) {
+                    // this.scheduleOnce(() => this.doBuilding(selfCollider, otherCollider), 0)
+                    this.doBuilding(selfCollider, otherCollider)
+                }
+            }
+        }
     },
 
     // 只在两个碰撞体结束接触时被调用一次
     onEndContact(contact, selfCollider, otherCollider) {
-        let currentRoof = otherCollider.node
-        let joint = currentRoof.getComponent(cc.RevoluteJoint)
-        joint.connectedBody = this.node.getComponent(cc.RigidBody)
-        joint.connectedAnchor = cc.v2(0, -50)
-        joint.anchor = cc.v2(0, 50)
     },
 
     // 每次将要处理碰撞体接触逻辑时被调用
@@ -89,27 +94,57 @@ cc.Class({
 
     // 每次处理完碰撞体接触逻辑时被调用
     onPostSolve(contact, selfCollider, otherCollider) {
-        if (this.status == Status.building) {
-            if (otherCollider.node.getComponent('box') &&
-                otherCollider.node.getComponent('box').isTop) {
-                // TODO 判断落点(接触点)
+    },
 
-                let selfPos = this.node.convertToWorldSpaceAR(cc.v2(0, 0))
-                let otherPos = otherCollider.node.convertToWorldSpaceAR(cc.v2(0, 0))
+    whetherToBuild(self, other) {
+        let selfPos = self.node.convertToWorldSpaceAR(cc.v2(0, 0))
+        let otherPos = other.node.convertToWorldSpaceAR(cc.v2(0, 0))
+        cc.log('onBeginContact say sPos: ' + selfPos + ' oPos: ' + otherPos)
 
-                cc.log('onBeginContact say sPos: ' + selfPos + ' oPos: ' + otherPos)
+        this.scheduleOnce(() => this.node.x = this.node.x + (otherPos.x - selfPos.x), 0)
 
-                otherCollider.node.getComponent('box').isTop = false
+        return true
+    },
 
-                let currentRoof = otherCollider.node
-                let joint = currentRoof.getComponent(cc.RevoluteJoint)
-                joint.connectedBody = this.node.getComponent(cc.RigidBody)
-                joint.connectedAnchor = cc.v2(0, -50)
-                joint.anchor = cc.v2(0, 50)
-                this.status = Status.built
-                this.isTop = true
-            }
+    fallDown() {
+
+    },
+
+    doBuilding(self, other) {
+
+        let centerThreshold = 10 // 中心偏差校准阈值
+
+        cc.log('angle: ' + self.node.eulerAngles)
+
+        let selfPos = self.node.convertToWorldSpaceAR(cc.v2(0, 0))
+        let otherPos = other.node.convertToWorldSpaceAR(cc.v2(0, 0))
+
+        other.node.getComponent('box').isTop = false
+
+        let currentRoof = other.node
+        let joint = currentRoof.addComponent(cc.RevoluteJoint)
+        joint.connectedBody = this.node.getComponent(cc.RigidBody)
+
+        joint.collideConnected = true
+        joint.lowerAngle = -10
+        joint.upperAngle = 10
+        joint.enableLimit = true
+
+        cc.log('dist: '+ selfPos.x - otherPos.x + ' is ' + (selfPos.x - otherPos.x) ? 'true' : 'false')
+
+        if (Math.abs(selfPos.x - otherPos.x) < centerThreshold) {
+            joint.connectedAnchor = cc.v2(0, -50)
+            joint.anchor = cc.v2(0, 50)
+        }else if(selfPos.x - otherPos.x){
+            joint.connectedAnchor = cc.v2(50 - (selfPos.x - otherPos.x), -50)
+            joint.anchor = cc.v2(50, 50)
+        }else{
+            joint.connectedAnchor = cc.v2(-50 - (selfPos.x - otherPos.x), -50)
+            joint.anchor = cc.v2(-50, 50)
         }
+
+        this.status = Status.built
+        this.isTop = true
     },
 
     wave() {
