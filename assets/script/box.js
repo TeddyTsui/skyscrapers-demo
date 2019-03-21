@@ -75,9 +75,7 @@ cc.Class({
         if (this.status == Status.building) {
             if (otherCollider.node.getComponent('box') &&
                 otherCollider.node.getComponent('box').isTop) {
-                // TODO 判断落点(接触点)
                 if (this.whetherToBuild(selfCollider, otherCollider)) {
-                    // this.scheduleOnce(() => this.doBuilding(selfCollider, otherCollider), 0)
                     this.doBuilding(selfCollider, otherCollider)
                 }
             }
@@ -100,9 +98,6 @@ cc.Class({
         let selfPos = self.node.convertToWorldSpaceAR(cc.v2(0, 0))
         let otherPos = other.node.convertToWorldSpaceAR(cc.v2(0, 0))
         cc.log('onBeginContact say sPos: ' + selfPos + ' oPos: ' + otherPos)
-
-        this.scheduleOnce(() => this.node.x = this.node.x + (otherPos.x - selfPos.x), 0)
-
         return true
     },
 
@@ -112,7 +107,7 @@ cc.Class({
 
     doBuilding(self, other) {
 
-        let centerThreshold = 10 // 中心偏差校准阈值
+        let centerArea = 10 // 中心偏差校准阈值
 
         cc.log('angle: ' + self.node.eulerAngles)
 
@@ -130,16 +125,16 @@ cc.Class({
         joint.upperAngle = 10
         joint.enableLimit = true
 
-        cc.log('dist: '+ selfPos.x - otherPos.x + ' is ' + (selfPos.x - otherPos.x) ? 'true' : 'false')
+        let dist = selfPos.x - otherPos.x
 
-        if (Math.abs(selfPos.x - otherPos.x) < centerThreshold) {
+        if (Math.abs(dist) < centerArea) {
             joint.connectedAnchor = cc.v2(0, -50)
             joint.anchor = cc.v2(0, 50)
-        }else if(selfPos.x - otherPos.x){
-            joint.connectedAnchor = cc.v2(50 - (selfPos.x - otherPos.x), -50)
+        }else if(dist > 0){
+            joint.connectedAnchor = cc.v2(50 - dist, -50)
             joint.anchor = cc.v2(50, 50)
         }else{
-            joint.connectedAnchor = cc.v2(-50 - (selfPos.x - otherPos.x), -50)
+            joint.connectedAnchor = cc.v2(-50 - dist, -50)
             joint.anchor = cc.v2(-50, 50)
         }
 

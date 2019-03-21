@@ -1,34 +1,9 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
-
 let Status = require('box')
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
         boxPrefab: {
             default: null,
             type: cc.Prefab
@@ -43,12 +18,6 @@ cc.Class({
             type: cc.Node,
         },
 
-        camera: {
-            default: null,
-            type: cc.Node
-        },
-
-        cameraOffset: 0,
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -58,11 +27,11 @@ cc.Class({
     },
 
     onLoad() {
-        // this.cameraOffset = this.node.y - this.camera.y
+
     },
 
     update (dt) {
-        // this.node.y = this.camera.y + this.cameraOffset
+
     },
 
     drop() {
@@ -81,7 +50,7 @@ cc.Class({
 
         joint.connectedBody = this.node.getComponent(cc.RigidBody)
 
-        joint.connectedAnchor = cc.v2(0, -100)
+        joint.connectedAnchor = cc.v2(0, -250)
 
         joint.anchor = cc.v2(0, 50)
 

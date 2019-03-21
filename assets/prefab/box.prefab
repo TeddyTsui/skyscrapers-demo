@@ -18,7 +18,7 @@
     "_parent": null,
     "_children": [],
     "_active": true,
-    "_level": 3,
+    "_level": 1,
     "_components": [
       {
         "__id__": 2
@@ -131,6 +131,7 @@
     "isWaving": false,
     "isTop": false,
     "rotate_angle": 0,
+    "statusChanged": false,
     "_id": ""
   },
   {
@@ -273,7 +274,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "60cb8ef2-e1ae-4e4a-ba43-ff9e1aeb1b12"
     },
     "fileId": "9bZT6JVWVAFI9H70y9ILLM",
     "sync": false

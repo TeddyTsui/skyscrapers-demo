@@ -7,6 +7,17 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        platform: {
+            default: null,
+            type: cc.Node,
+        },
+
+        platformCtrl: {
+            default: null,
+            type: cc.Component,
+            visible: false,
+        },
+
         hook: {
             default: null,
             type: cc.Node,
@@ -18,7 +29,10 @@ cc.Class({
             visible: false,
         },
 
-        hookCtrlEnable: true,
+        hookCtrlEnable: {
+            default: true,
+            visible: false
+        },
 
         building: {
             default: null,
@@ -62,6 +76,8 @@ cc.Class({
         this.hookController = this.hook.getComponent('hook')
 
         this.buildingController = this.building.getComponent('building')
+
+        // this.platformCtrl = this.platform.getComponent('platform')
 
         this.node.on(cc.Node.EventType.TOUCH_START, function (event) {
             this.doBuild()
