@@ -73,12 +73,14 @@ cc.Class({
     },
 
     onLoad() {
+        // 获取控制组件
         this.hookController = this.hook.getComponent('hook')
 
         this.buildingController = this.building.getComponent('building')
 
         // this.platformCtrl = this.platform.getComponent('platform')
 
+        // 监听冒泡事件
         this.node.on(cc.Node.EventType.TOUCH_START, function (event) {
             this.doBuild()
             event.stopPropagation()

@@ -9,7 +9,7 @@ cc.Class({
             type: cc.Node
         },
 
-        levels: {
+        levels: {// 盒子队列
             default: [],
             type: [cc.Node]
         }
@@ -24,12 +24,12 @@ cc.Class({
 
     },
 
-    goUpstairs() {
+    goUpstairs() {// 镜头移动
         let action = cc.moveBy(2, cc.v2(0, 100))
         this.camera.runAction(action)
     },
 
-    buildSucceed(newBox) {
+    buildSucceed(newBox) {// 添加盒子
         this.levels.push(newBox)
 
         if(this.levels.length >= 6){

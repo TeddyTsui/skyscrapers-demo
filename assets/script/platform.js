@@ -22,6 +22,10 @@ cc.Class({
 
     },
 
+    //TODO 挂钩平台移动
+    // 考虑保持与建筑最上方盒子保持一定距离
+    // 考虑随镜头移动
+
     adjustHeight(offset) {
         this.cameraOffset += offset
         let action = cc.moveBy(2, cc.v2(0, offset))

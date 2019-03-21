@@ -4,16 +4,17 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        boxPrefab: {
+        boxPrefab: {// 预制盒子
             default: null,
             type: cc.Prefab
         },
 
+        //生成点位置
         boxSpawnX: 0,
 
         boxSpawnY: 0,
 
-        box: {
+        box: {//当前绑定盒子
             default: null,
             type: cc.Node,
         },
@@ -23,7 +24,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     start() {
-
+        this.swing()
     },
 
     onLoad() {
@@ -34,12 +35,12 @@ cc.Class({
 
     },
 
-    drop() {
+    drop() {// 掉落
         this.box.getComponent('box').status = Status.building
         return this.box
     },
 
-    spawnNewBox() {
+    spawnNewBox() {// 生成盒子
         let newBox = cc.instantiate(this.boxPrefab)
 
         this.node.addChild(newBox)
@@ -56,4 +57,8 @@ cc.Class({
 
         this.box = newBox
     },
+
+    swing() {// 摇摆
+        //TODO 
+    }
 });
